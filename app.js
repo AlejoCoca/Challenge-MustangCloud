@@ -5,7 +5,7 @@ var hbs = require('hbs')
 const app = express()
 app.set('view engine', 'hbs')
 app.set('views', __dirname + '/src/views')
-app.use(express.static(__dirname + '/'))
+app.use(express.static(__dirname + '/src'))
 
 require('dotenv').config({ path: './src/.env' });
 
