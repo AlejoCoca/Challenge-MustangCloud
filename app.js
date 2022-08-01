@@ -7,7 +7,7 @@ app.set('view engine', 'hbs')
 app.set('views', __dirname + '/src/views')
 app.use(express.static(__dirname + '/src'))
 
-require('dotenv').config({ path: './.env' });
+require('dotenv').config({ path: './src/.env' });
 
 const puerto = process.env.PORT || 3000;
 
