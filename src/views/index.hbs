@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{title}}</title>
+	<link rel="StyleSheet" href="/css/styles.css" type="text/css">
+</head>
+	<body>
+		<a href='/'>recargar</a><br>
+		<p>{{demo.name}} is {{demo.age}} years old.</p>
+		{{#each demo.hobbies}}
+			<li>{{this}}</li>
+		{{/each}}
+	</body>
+</html>
