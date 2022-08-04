@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const cheerio = require('cheerio')
 const request = require('request-promise')
 const hbs = require('hbs')
+const Equipo = require('./schemas/equipo-schema')
 require('dotenv').config({ path: '.env' });
 
 const app = express()
@@ -24,14 +25,75 @@ app.get('/', (req, res)=>{
    res.render('index', {demo:demo, title : 'Home'})
 })
 
-async function init() {
-  const response = await request('https://www.futbolargentino.com/primera-division/tabla-de-posiciones')
-  console.log(response)
+async function scraper() {
+  const $ = await request({
+    uri: 'https://www.futbolargentino.com/primera-division/tabla-de-posiciones',
+    transform: body => cheerio.load(body)
+  })
+
+  let ndato = 0
+  let newEquipo=new Equipo()
+  Equipo.find
+  $('tr td').each(async (i, elem) =>{
+    if(ndato==10){
+      let equipo = await Equipo.find({nombre:newEquipo.nombre})
+      if(!equipo){
+        console.log(newEquipo)
+        await newEquipo.save()
+      }
+      newEquipo= new Equipo()
+      ndato=0
+    }
+    switch(ndato){
+      case 0:{
+        newEquipo.posicion=$(elem).text()
+        break
+      }
+      case 1:{
+        newEquipo.escudo=$(elem).find('.lazy').attr('data-src')
+        newEquipo.nombre=$(elem).find('span.d-none').text()
+        break
+      }
+      case 2:{
+        newEquipo.partidos_jugados=$(elem).text()
+        break
+      }
+      case 3:{
+        newEquipo.ganados=$(elem).text()
+        break
+      }
+      case 4:{
+        newEquipo.empatados=$(elem).text()
+        break
+      }
+      case 5:{
+        newEquipo.perdidos=$(elem).text()
+        break
+      }
+      case 6:{
+        newEquipo.goles_favor=$(elem).text()
+        break
+      }
+      case 7:{
+        newEquipo.goles_contra=$(elem).text()
+        break
+      }
+      case 8:{
+        newEquipo.diferencia_goles=$(elem).text()
+        break
+      }
+      case 9:{
+        newEquipo.puntos=$(elem).text()
+        break
+      }
+    }
+    ndato++
+  })
 }
 
 setInterval(()=>{
   console.log(`The queue is currently 2 long`);
-  init()
+  scraper()
 }, process.env.TIEMPO_DE_ESPERA || 10000);
 
 const inicio = async () => {
