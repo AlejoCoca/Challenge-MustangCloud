@@ -4,7 +4,6 @@ const cheerio = require('cheerio')
 const request = require('request-promise')
 const hbs = require('hbs')
 const Equipo = require('./schemas/equipo-schema')
-const { find } = require('./schemas/equipo-schema')
 require('dotenv').config({ path: '.env' });
 
 const app = express()
@@ -14,15 +13,7 @@ app.use(express.static(__dirname + '/src'))
 
 const puerto = process.env.PORT || 3000;
 
-//aca va la coneccion a la base de datos con mongoose
-var demo = {
-  name : 'Rohan',
-  age : 26,
-  hobbies : ['Coding', 'Reading', 'Watching Movies']
-}
-
 app.get('/', async(req, res)=>{
-  //funcion q carga los datos de la bd
   let equipos=await Equipo.find({})
    res.render('index', {equipos})
 })
@@ -79,7 +70,6 @@ async function scraper() {
         }
       }
     }
-    //console.log(newEquipo)
     let equipo=await Equipo.findOne({nombre:newEquipo.nombre})
     if(equipo==undefined){
       console.log("GUARDADO")
@@ -100,11 +90,10 @@ async function scraper() {
     }
     newEquipo= new Equipo({})
   }
-  console.log(await Equipo.find())
+  //console.log(await Equipo.find())
 }
 
 setInterval(()=>{
-  console.log(`The queue is currently 2 long`);
   scraper()
 }, process.env.TIEMPO_DE_ESPERA || 10000);
 
