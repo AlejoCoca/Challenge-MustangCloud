@@ -2,8 +2,49 @@ body {
     background-color:#3f537e;
   }
 
-  p {
-    color:#ef0a0a;
-    font-family:verdana;
-    text-align:justify;
+  div.padre {
+    display: flex;
+    place-items: center;
+    place-content: center;
   }
+
+  table {
+    display: table;
+    border-collapse: separate;
+    box-sizing: border-box;
+    text-indent: initial;
+    border-spacing: 2px;
+    border-color: grey;
+    margin: auto;
+  }
+
+table.default th {
+    padding: 0.2em 0.8em;
+    border: 1px solid rgba(20,50,90,.25);
+    background: rgba(0,102,255,.25);
+    text-align: center;
+}
+
+  table.default td {
+    padding: 0.2em 0.8em;
+    border: 1px solid rgba(16,76,167,.25);
+    background: rgba(90,156,255,.25);
+    text-align: left;
+}
+
+tr {
+  display: table-row;
+  vertical-align: inherit;
+  border-color: inherit;
+}
+
+th {
+  display: table-cell;
+  vertical-align: inherit;
+  font-weight: bold;
+}
+
+td {
+    display: table-cell;
+    vertical-align: inherit;
+}

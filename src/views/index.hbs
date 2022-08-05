@@ -1,14 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>{{title}}</title>
+	<title>Tabla Primera Division</title>
 	<link rel="StyleSheet" href="/css/styles.css" type="text/css">
 </head>
 	<body>
-		<a href='/'>recargar</a><br>
-		<p>{{demo.name}} is {{demo.age}} years old.</p>
-		{{#each demo.hobbies}}
-			<li>{{this}}</li>
+		<div class="padre">
+		<table class="default">
+			<tr>
+				<th>Pos</th>
+				<th></th>
+				<th>Equipo</th>
+				<th>PJ</th>
+				<th>G</th>
+				<th>E</th>
+				<th>P</th>
+				<th>GF</th>
+				<th>GC</th>
+				<th>DG</th>
+				<th>Pts</th>
+			</tr>
+		{{#each equipos}}
+				<tr>
+					<td>{{posicion}}</td>
+					<td><img src="{{escudo}}"></td>
+					<td>{{nombre}}</td>
+					<td>{{partidos_jugados}}</td>
+					<td>{{ganados}}</td>
+					<td>{{perdidos}}</td>
+					<td>{{empatados}}</td>
+					<td>{{goles_favor}}</td>
+					<td>{{goles_contra}}</td>
+					<td>{{diferencia_goles}}</td>
+					<td>{{puntos}}</td>
+				</tr>
+				<br>
 		{{/each}}
+		</table>
+		</div>
 	</body>
 </html>

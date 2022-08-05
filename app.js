@@ -4,6 +4,7 @@ const cheerio = require('cheerio')
 const request = require('request-promise')
 const hbs = require('hbs')
 const Equipo = require('./schemas/equipo-schema')
+const { find } = require('./schemas/equipo-schema')
 require('dotenv').config({ path: '.env' });
 
 const app = express()
@@ -20,9 +21,10 @@ var demo = {
   hobbies : ['Coding', 'Reading', 'Watching Movies']
 }
 
-app.get('/', (req, res)=>{
+app.get('/', async(req, res)=>{
   //funcion q carga los datos de la bd
-   res.render('index', {demo:demo, title : 'Home'})
+  let equipos=await Equipo.find({})
+   res.render('index', {equipos})
 })
 
 async function scraper() {
@@ -30,65 +32,75 @@ async function scraper() {
     uri: 'https://www.futbolargentino.com/primera-division/tabla-de-posiciones',
     transform: body => cheerio.load(body)
   })
-
-  let ndato = 0
   let newEquipo=new Equipo()
-  Equipo.find
-  $('tr td').each(async (i, elem) =>{
-    if(ndato==10){
-      let equipo = await Equipo.find({nombre:newEquipo.nombre})
-      if(!equipo){
-        console.log(newEquipo)
-        await newEquipo.save()
-      }
-      newEquipo= new Equipo()
-      ndato=0
-    }
-    switch(ndato){
-      case 0:{
-        newEquipo.posicion=$(elem).text()
-        break
-      }
-      case 1:{
-        newEquipo.escudo=$(elem).find('.lazy').attr('data-src')
-        newEquipo.nombre=$(elem).find('span.d-none').text()
-        break
-      }
-      case 2:{
-        newEquipo.partidos_jugados=$(elem).text()
-        break
-      }
-      case 3:{
-        newEquipo.ganados=$(elem).text()
-        break
-      }
-      case 4:{
-        newEquipo.empatados=$(elem).text()
-        break
-      }
-      case 5:{
-        newEquipo.perdidos=$(elem).text()
-        break
-      }
-      case 6:{
-        newEquipo.goles_favor=$(elem).text()
-        break
-      }
-      case 7:{
-        newEquipo.goles_contra=$(elem).text()
-        break
-      }
-      case 8:{
-        newEquipo.diferencia_goles=$(elem).text()
-        break
-      }
-      case 9:{
-        newEquipo.puntos=$(elem).text()
-        break
+  for(let i=0;i<$('tr td').length/10;i++){
+    for(let j=0;j<10;j++){
+      switch(j){
+        case 0:{
+          newEquipo.posicion=$('tr td').eq(i*10+j).text()
+          break
+        }
+        case 1:{
+          newEquipo.escudo=$('tr td').eq(i*10+j).find('.lazy').attr('data-src')
+          newEquipo.nombre=$('tr td').eq(i*10+j).find('span.d-none').text()
+          break
+        }
+        case 2:{
+          newEquipo.partidos_jugados=$('tr td').eq(i*10+j).text()
+          break
+        }
+        case 3:{
+          newEquipo.ganados=$('tr td').eq(i*10+j).text()
+          break
+        }
+        case 4:{
+          newEquipo.empatados=$('tr td').eq(i*10+j).text()
+          break
+        }
+        case 5:{
+          newEquipo.perdidos=$('tr td').eq(i*10+j).text()
+          break
+        }
+        case 6:{
+          newEquipo.goles_favor=$('tr td').eq(i*10+j).text()
+          break
+        }
+        case 7:{
+          newEquipo.goles_contra=$('tr td').eq(i*10+j).text()
+          break
+        }
+        case 8:{
+          newEquipo.diferencia_goles=$('tr td').eq(i*10+j).text()
+          break
+        }
+        case 9:{
+          newEquipo.puntos=$('tr td').eq(i*10+j).text()
+          break
+        }
       }
     }
-    ndato++
-  })
+    //console.log(newEquipo)
+    let equipo=await Equipo.findOne({nombre:newEquipo.nombre})
+    if(equipo==undefined){
+      console.log("GUARDADO")
+      await newEquipo.save()
+    }
+    else if(equipo.nombre==newEquipo.nombre){
+      console.log("ACTUALIZADO")
+      await Equipo.findOneAndUpdate({nombre:newEquipo.nombre},{$set:{
+        posicion:newEquipo.posicion,
+        escudo:newEquipo.escudo,
+        partidos_jugados:newEquipo.partidos_jugados,
+        ganados:newEquipo.ganados,empatados:newEquipo.empatados,
+        perdidos:newEquipo.perdidos,goles_favor:newEquipo.goles_favor,
+        goles_contra:newEquipo.goles_contra,
+        diferencia_goles:newEquipo.diferencia_goles,
+        puntos:newEquipo.puntos
+      }})
+    }
+    newEquipo= new Equipo({})
+  }
+  console.log(await Equipo.find())
 }
 
 setInterval(()=>{
