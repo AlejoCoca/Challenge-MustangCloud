@@ -1,5 +1,28 @@
 body {
     background-color:#3f537e;
+    font-family: Raleway,sans-serif;
+    font-size: 1.2em;
+  }
+
+  @media screen and (max-width:800px) {
+    th.desaparecible{
+      display: none;
+    }
+    td.desaparecible{
+      display: none;
+    }
+  }
+
+  @media screen and (max-width:700px) {
+    body{
+      font-size: 1em;
+    }
+  }
+
+  @media screen and (min-width:1200px) {
+    body{
+      font-size: 1.5em;
+    }
   }
 
   div.padre {
@@ -30,6 +53,18 @@ table.default th {
     border: 1px solid rgba(16,76,167,.25);
     background: rgba(90,156,255,.25);
     text-align: left;
+}
+
+tr:nth-child(-n+1) {
+    background-color: rgba(0,102,255,.25) !important;
+}
+
+tr:nth-child(-n+5) {
+    background-color: rgba(25, 200, 48, 0.735);
+}
+
+tr:nth-last-child(-n+4){
+    background-color: rgba(255, 0, 0, 0.756);
 }
 
 tr {
