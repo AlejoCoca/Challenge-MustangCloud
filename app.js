@@ -13,9 +13,9 @@ app.use(express.static(__dirname + '/src'))
 
 const puerto = process.env.PORT || 3000;
 
-app.get('/', async(req, res)=>{
-  let equipos=await Equipo.find({})
-   res.render('index', {equipos})
+app.get('/', async (req, res) => {
+  let equipos = await Equipo.find({})
+  res.render('index', { equipos })
 })
 
 async function scraper() {
@@ -23,77 +23,44 @@ async function scraper() {
     uri: 'https://www.futbolargentino.com/primera-division/tabla-de-posiciones',
     transform: body => cheerio.load(body)
   })
-  let newEquipo=new Equipo()
-  for(let i=0;i<$('tr td').length/10;i++){
-    for(let j=0;j<10;j++){
-      switch(j){
-        case 0:{
-          newEquipo.posicion=$('tr td').eq(i*10+j).text()
-          break
-        }
-        case 1:{
-          newEquipo.escudo=$('tr td').eq(i*10+j).find('.lazy').attr('data-src')
-          newEquipo.nombre=$('tr td').eq(i*10+j).find('span.d-none').text()
-          break
-        }
-        case 2:{
-          newEquipo.partidos_jugados=$('tr td').eq(i*10+j).text()
-          break
-        }
-        case 3:{
-          newEquipo.ganados=$('tr td').eq(i*10+j).text()
-          break
-        }
-        case 4:{
-          newEquipo.empatados=$('tr td').eq(i*10+j).text()
-          break
-        }
-        case 5:{
-          newEquipo.perdidos=$('tr td').eq(i*10+j).text()
-          break
-        }
-        case 6:{
-          newEquipo.goles_favor=$('tr td').eq(i*10+j).text()
-          break
-        }
-        case 7:{
-          newEquipo.goles_contra=$('tr td').eq(i*10+j).text()
-          break
-        }
-        case 8:{
-          newEquipo.diferencia_goles=$('tr td').eq(i*10+j).text()
-          break
-        }
-        case 9:{
-          newEquipo.puntos=$('tr td').eq(i*10+j).text()
-          break
-        }
-      }
-    }
-    let equipo=await Equipo.findOne({nombre:newEquipo.nombre})
-    if(equipo==undefined){
+  let newEquipo = new Equipo()
+  for (let i = 0; i < $('tr td').length / 10; i++) {                        // en el for uso $('tr td')/10 porque $('tr td') devuelve todos los datos de la tabla
+    newEquipo.nombre = $('tr td').eq(i * 10 + 1).find('span.d-none').text() // y como cada equipo tiene 10 datos al dividir por 10 me da la cantidad de equipos sin la nesesidad de harcodearlo
+    let equipo = await Equipo.findOne({ nombre: newEquipo.nombre })
+    if (equipo == undefined) {
+      newEquipo.posicion = $('tr td').eq(i * 10 + 0).text()
+      newEquipo.escudo = $('tr td').eq(i * 10 + 1).find('.lazy').attr('data-src')
+      newEquipo.partidos_jugados = $('tr td').eq(i * 10 + 2).text()
+      newEquipo.ganados = $('tr td').eq(i * 10 + 3).text()
+      newEquipo.empatados = $('tr td').eq(i * 10 + 4).text()
+      newEquipo.perdidos = $('tr td').eq(i * 10 + 5).text()
+      newEquipo.goles_favor = $('tr td').eq(i * 10 + 6).text()
+      newEquipo.goles_contra = $('tr td').eq(i * 10 + 7).text()
+      newEquipo.diferencia_goles = $('tr td').eq(i * 10 + 8).text()
+      newEquipo.puntos = $('tr td').eq(i * 10 + 9).text()
       console.log("GUARDADO")
       await newEquipo.save()
-    }
-    else if(equipo.nombre==newEquipo.nombre){
+    } else if (equipo.nombre == newEquipo.nombre) {
       console.log("ACTUALIZADO")
-      await Equipo.findOneAndUpdate({nombre:newEquipo.nombre},{$set:{
-        posicion:newEquipo.posicion,
-        escudo:newEquipo.escudo,
-        partidos_jugados:newEquipo.partidos_jugados,
-        ganados:newEquipo.ganados,empatados:newEquipo.empatados,
-        perdidos:newEquipo.perdidos,goles_favor:newEquipo.goles_favor,
-        goles_contra:newEquipo.goles_contra,
-        diferencia_goles:newEquipo.diferencia_goles,
-        puntos:newEquipo.puntos
-      }})
+      await Equipo.findOneAndUpdate({ nombre: newEquipo.nombre }, {
+        $set: {
+          posicion: newEquipo.posicion,
+          escudo: newEquipo.escudo,
+          partidos_jugados: newEquipo.partidos_jugados,
+          ganados: newEquipo.ganados, empatados: newEquipo.empatados,
+          perdidos: newEquipo.perdidos, goles_favor: newEquipo.goles_favor,
+          goles_contra: newEquipo.goles_contra,
+          diferencia_goles: newEquipo.diferencia_goles,
+          puntos: newEquipo.puntos
+        }
+      })
     }
-    newEquipo= new Equipo({})
+    newEquipo = new Equipo({})
   }
-  //console.log(await Equipo.find())
+  //console.log(await Equipo.find()) sacar comentario para poder ver los equipos en la base de datos
 }
 
-setInterval(()=>{
+setInterval(() => {
   scraper()
 }, process.env.TIEMPO_DE_ESPERA || 10000);
 
@@ -102,7 +69,7 @@ const inicio = async () => {
   console.log('Conectado a la base de datos')
 
   const server = app.listen(puerto, () => {
-    console.log('Servidor web iniciado en el puerto: '+puerto)
+    console.log('Servidor web iniciado en el puerto: ' + puerto)
   })
 }
 
