@@ -13,8 +13,18 @@ app.use(express.static(__dirname + '/src'))
 
 const puerto = process.env.PORT || 3000;
 
+hbs.registerHelper('obtenerFondo',(equipo)=>{
+  if(equipo.posicion<=4){
+    return "primeros";
+  }
+  else if(equipo.posicion>=25){
+    return "ultimos";
+  }
+})
+
 app.get('/', async (req, res) => {
-  let equipos = await Equipo.find({})
+  const equipos = await Equipo.find({})
+  console.log(equipos.length)
   res.render('index', { equipos })
 })
 

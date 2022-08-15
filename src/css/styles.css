@@ -55,15 +55,11 @@ table.default th {
     text-align: left;
 }
 
-tr:nth-child(-n+1) {
-    background-color: rgba(0,102,255,.25) !important;
-}
-
-tr:nth-child(-n+5) {
+tr.primeros {
     background-color: rgba(25, 200, 48, 0.735);
 }
 
-tr:nth-last-child(-n+4){
+tr.ultimos{
     background-color: rgba(255, 0, 0, 0.756);
 }
 
@@ -82,4 +78,8 @@ th {
 td {
     display: table-cell;
     vertical-align: inherit;
+}
+
+h1 {
+  font-size: inherit;
 }
