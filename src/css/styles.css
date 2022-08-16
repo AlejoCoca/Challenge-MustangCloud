@@ -83,3 +83,9 @@ td {
 h1 {
   font-size: inherit;
 }
+
+h2 {
+  font-size: inherit;
+  margin:auto;
+  font-weight: inherit;
+}
