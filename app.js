@@ -13,11 +13,11 @@ app.use(express.static(__dirname + '/src'))
 
 const puerto = process.env.PORT || 3000;
 
-hbs.registerHelper('obtenerFondo',(equipo)=>{
+hbs.registerHelper('obtenerFondo',(equipo, equipostotales)=>{
   if(equipo.posicion<=4){
-    return "primeros";
+    return "primeros "+equipostotales;
   }
-  else if(equipo.posicion>=25){
+  else if(equipo.posicion>equipostotales-4){
     return "ultimos";
   }
 })

@@ -13,7 +13,7 @@
 		<table class="default">
 			<tr>
 				<th><h1>Pos</h1></th>
-				<th></th>
+				<th>{{equipos.length}}</th>
 				<th><h1>Equipo</h1></th>
 				<th><h1>PJ</h1></th>
 				<th><h1>G</h1></th>
@@ -25,7 +25,7 @@
 				<th><h1>Pts</h1></th>
 			</tr>
 		{{#each equipos}}
-				<tr class="{{obtenerFondo this}}">
+				<tr class="{{obtenerFondo this ../equipos.length}}">
 					<td>{{posicion}}</td>
 					<td><img src="{{escudo}}"></td>
 					<td><h2>{{nombre}}</h2></td>
