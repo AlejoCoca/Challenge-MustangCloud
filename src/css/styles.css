@@ -4,18 +4,15 @@ body {
     font-size: 1.2em;
   }
 
-  @media screen and (max-width:800px) {
+  @media screen and (max-width:900px) {
     th.desaparecible{
       display: none;
     }
     td.desaparecible{
       display: none;
     }
-  }
-
-  @media screen and (max-width:700px) {
-    body{
-      font-size: 1em;
+    table{
+      width: 100%;
     }
   }
 
@@ -32,7 +29,6 @@ body {
   }
 
   table {
-    width: 70%;
     display: table;
     border-collapse: separate;
     box-sizing: border-box;

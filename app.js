@@ -14,7 +14,7 @@ app.use(express.static(__dirname + '/src'))
 const puerto = process.env.PORT || 3000;
 
 app.get('/', async (req, res) => {
-  const equipos = await Equipo.find({})
+  const equipos = await Equipo.find({}).sort({posicion: 1})
   res.render('index', { equipos })
 })
 
