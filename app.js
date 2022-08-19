@@ -26,6 +26,7 @@ hbs.registerHelper('obtenerFondo', (equipo, equipostotales) => {
   else if (equipo.posicion > equipostotales - 4) {
     return "ultimos";
   }
+  return "";
 })
 
 async function scraper() {
